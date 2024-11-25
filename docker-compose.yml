@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  nest-backend:
+    build:
+      context: ./Nest Back-end
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - DB_URI=mongodb://mongo:27017/your_database_name
+      - JWT_SECRET=your_jwt_secret_here
+    volumes:
+      - ./Nest Back-end:/app
+      - /app/node_modules
+    depends_on:
+      - mongo
+
+  frontend:
+    react-build:
+      context: ./React_Front
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3000"
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./React_Front:/app
+      - /app/node_modules
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:
