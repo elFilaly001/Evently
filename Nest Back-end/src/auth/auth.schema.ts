@@ -16,12 +16,6 @@ export class User {
 
   @Prop({ default: Date.now })
   createdAt: Date;
-
-  @Prop({ default: false })
-  isVerified: boolean;
-
-  @Prop({ default: 'user' })
-  roles: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
