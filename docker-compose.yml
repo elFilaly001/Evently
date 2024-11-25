@@ -10,8 +10,12 @@ services:
     env_file:
       - .env
     volumes:
-      - ./Nest Back-end:/app
-      - /app/node_modules
+      - ./Nest Back-end:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
 
   frontend:
     build:
@@ -22,5 +26,8 @@ services:
     env_file:
       - .env
     volumes:
-      - ./React_Front:/app
-      - /app/node_modules
+      - ./React_Front:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true

@@ -2,19 +2,20 @@
 FROM node:20-alpine
 
 # Set the working directory in the container
-WORKDIR /app
+WORKDIR /usr/src/app
+
+# Install NestJS CLI globally
+RUN npm install -g @nestjs/cli
 
 # Copy package.json and package-lock.json to the working directory
-COPY package.json ./
+COPY package*.json ./
 
 # Install dependencies
-RUN npm install
 
-# Copy the rest of the application code to the working directory
-COPY . .
+RUN npm install
 
 # Expose the port the app runs on
 EXPOSE 3000
 
 # Define the command to run the application
-CMD ["npm", "run", "start:dev"]
+CMD ["npm", "run", "dev"]
