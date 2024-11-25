@@ -8,7 +8,6 @@ export class AuthController {
 
   @Post('register')
   register(@Body() user: RegisterDto) {
-    console.log(user);
     return this.authService.register(user);
   }
 
