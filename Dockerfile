@@ -1,8 +1,8 @@
-# Use Node.js LTS version as base image
-FROM node:20
+FROM node:20-slim
 
 # Set working directory
 WORKDIR /usr/src/app
+
 # Copy package files
 COPY package*.json ./
 
@@ -15,5 +15,5 @@ COPY . .
 # Expose port 5173
 EXPOSE 5173
 
-# Start the app
-CMD ["npm", "run", "dev"]
+# Add host flag to make the server accessible outside the container
+CMD ["npm", "run", "dev", "--", "--host"] 

@@ -32,24 +32,23 @@ export class AuthService {
     try {
       const userExists = await this.userModel.findOne({ email: user.email });
       if (!userExists) {
-        throw new BadRequestException('User does not exist');
+        throw new BadRequestException('No user found with this email');
       }
       const isPasswordValid = await bcrypt.compare(user.password, userExists.password);
       if (!isPasswordValid) {
-        throw new BadRequestException('Invalid password');
+        throw new BadRequestException('Please check your password');
       }
       const userResponse: UserResponseDto = {
         username: userExists.username,
         email: userExists.email,
       };
-      
       const token = this.jwtService.sign({ 
         sub: userExists._id.toString()
       });
       return {user: userResponse, token};
     } catch (error) {
-      console.error('Login error:', error);
-      throw new BadRequestException();
+      console.error( error);
+      throw new BadRequestException(error);
     }
   }
 }
