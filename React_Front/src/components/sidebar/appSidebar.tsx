@@ -16,7 +16,9 @@ import {
   DropdownMenuContent,
   DropdownMenuItem
 } from "../ui/dropdown-menu"
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { logout } from "@/store/slices/authslice";
+import { useDispatch } from "react-redux";
 
 interface MenuItem {
   title: string;
@@ -32,6 +34,13 @@ interface AppSidebarProps {
 
 export default function AppSidebar({ menuItems, userName, userEmail }: AppSidebarProps) {
   const firstLetter = userName?.charAt(0)?.toUpperCase() || ''
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/login");
+  }
+
   return (
     <Sidebar>
       <SidebarContent>
@@ -74,8 +83,13 @@ export default function AppSidebar({ menuItems, userName, userEmail }: AppSideba
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56 mb-5" side="right" align="start">
-            <DropdownMenuItem className="">
-              <span>Logout</span>
+            <DropdownMenuItem className="cursor-pointer">
+              <button 
+                onClick={handleLogout}
+                className="w-full text-left cursor-pointer hover:bg-accent hover:text-accent-foreground"
+              >
+                Logout
+              </button>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
