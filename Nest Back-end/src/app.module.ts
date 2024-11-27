@@ -1,13 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { AuthController } from './auth/auth.controller';
-import { AuthModule } from './auth/auth.module';
 import { MongooseModule } from '@nestjs/mongoose';
-import { JwtModule } from '@nestjs/jwt';
-import { EventController } from './event/event.controller';
+import { AuthModule } from './auth/auth.module';
 import { EventModule } from './event/event.module';
+import { InscriptionModule } from './inscription/inscription.module';
 
 @Module({
   imports: [
@@ -17,8 +13,9 @@ import { EventModule } from './event/event.module';
     MongooseModule.forRoot(process.env.DB_URI),
     AuthModule,
     EventModule,
+    InscriptionModule,
   ],
-  controllers: [AppController, EventController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
