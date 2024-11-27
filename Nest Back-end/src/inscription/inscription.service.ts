@@ -1,6 +1,7 @@
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
+import { InscriptionDto, } from './inscription.dto';
 
 interface Inscription {
     event: string;
@@ -41,12 +42,20 @@ export class InscriptionService {
 
     async getInscriptions(id: string): Promise<Inscription[]> {
         try {
-            const inscriptions = await this.inscriptionModel.find({event: id});
-            if (!inscriptions) {
+            // Validate if the id is a valid MongoDB ObjectId
+            if (!Types.ObjectId.isValid(id)) {
+                throw new BadRequestException('Invalid event ID format');
+            }
+            
+            const inscriptions = await this.inscriptionModel.find({ event: id });
+            if (!inscriptions || inscriptions.length === 0) {
                 throw new NotFoundException('Inscriptions not found');
             }
             return inscriptions;
         } catch (error) {
+            if (error instanceof BadRequestException || error instanceof NotFoundException) {
+                throw error;
+            }
             throw new BadRequestException(error);
         }
     }
@@ -63,14 +72,21 @@ export class InscriptionService {
         }
     }
 
-    async updateInscription(id: string, inscription: Inscription): Promise<Inscription | null> {
+    async updateInscription(id: string, inscription: InscriptionDto): Promise<InscriptionDto | null> {
         try {
-            const updatedInscription = await this.inscriptionModel.findByIdAndUpdate(id, inscription, { new: true });
+            const updatedInscription = await this.inscriptionModel.findByIdAndUpdate(
+                id,
+                { $set: inscription },
+                { new: true }
+            );
             if (!updatedInscription) {
                 throw new NotFoundException('Inscription not found');
             }
             return updatedInscription;
         } catch (error) {
+            if (error instanceof NotFoundException) {
+                throw error;
+            }
             throw new BadRequestException(error);
         }
     }

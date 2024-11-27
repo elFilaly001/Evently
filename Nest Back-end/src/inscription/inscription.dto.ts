@@ -30,3 +30,4 @@ export class InscriptionDto {
     @Type(() => ParticipantDto)
     participant: ParticipantDto;
 }
+

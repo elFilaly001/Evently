@@ -1,6 +1,7 @@
 import { Controller, Get, Param, Post, Body, Put, Delete, BadRequestException, NotFoundException } from '@nestjs/common';
 import { InscriptionService } from './inscription.service';
-import { InscriptionDto } from './inscription.dto';
+import { InscriptionDto} from './inscription.dto';
+import { Types } from 'mongoose';
 
 @Controller('api/inscription')
 export class InscriptionController {
@@ -46,14 +47,23 @@ export class InscriptionController {
     // }
 
     @Put(':id')
-    async updateInscription(@Param('id') id: string, @Body() inscription: InscriptionDto): Promise<InscriptionDto | null> {
+    async updateInscription(
+        @Param('id') id: string,
+        @Body() data: InscriptionDto
+    ): Promise<InscriptionDto> {
         try {
-            const updatedInscription = await this.inscriptionService.updateInscription(id, inscription);
+            if (!Types.ObjectId.isValid(id)) {
+                throw new BadRequestException('Invalid inscription ID format');
+            }
+            const updatedInscription = await this.inscriptionService.updateInscription(id, data);
             if (!updatedInscription) {
                 throw new NotFoundException('Inscription not found');
             }
             return updatedInscription;
         } catch (error) {
+            if (error instanceof BadRequestException || error instanceof NotFoundException) {
+                throw error;
+            }
             throw new BadRequestException(error);
         }
     }
@@ -67,7 +77,7 @@ export class InscriptionController {
             }
             return deletedInscription;
         } catch (error) {
-            throw new BadRequestException(error);
+            throw error;
         }
     }
 }
