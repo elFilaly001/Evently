@@ -1,9 +1,11 @@
-import { Controller, Get, Param, Post, Body, Put, Delete, BadRequestException, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Param, Post, Body, Put, Delete, BadRequestException, NotFoundException, UseGuards } from '@nestjs/common';
 import { InscriptionService } from './inscription.service';
 import { InscriptionDto} from './inscription.dto';
 import { Types } from 'mongoose';
-
+import { AuthGuard } from '../auth/auth.guard';
+    
 @Controller('api/inscription')
+@UseGuards(AuthGuard)
 export class InscriptionController {
     constructor(private readonly inscriptionService: InscriptionService) {}
     

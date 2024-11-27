@@ -12,13 +12,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import PasswordInput from "@/components/ui/PasswordInput";
 import toast, { Toaster } from 'react-hot-toast';
-// import "react-toastify/dist/ReactToastify.css";
-import { Link} from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { axiosInstance } from "@/services/axiosInstence";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../store/slices/authslice";
-// import AuthContextProvider from "../../context/AuthContext";
-// import { AuthContext } from "../../context/AuthContext";
+
 
 
 
@@ -29,6 +27,7 @@ export default function LoginForm() {
     });
 
     const dispatch = useDispatch(); 
+    const navigate = useNavigate();
 
     const validateForm = (): boolean => {
 
@@ -78,10 +77,13 @@ export default function LoginForm() {
             const response = await axiosInstance.post('/auth/login', data);
 
             if (response.status === 201) {
-                console.log(response.data);
+                console.log(response.data.user);
                 dispatch(setUser(response.data.user));
-                localStorage.setItem("token", JSON.stringify(response.data.token));
+                localStorage.setItem("ticket", JSON.stringify(response.data.token));
                 toast.success("Logged in successfully");
+                setTimeout(() => {
+                    navigate("/Inscription");
+                }, 2500);
             }
         } catch (error: any) {
             console.log(error);
