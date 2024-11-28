@@ -35,9 +35,21 @@ describe('EventService', () => {
         EventService,
         {
           provide: getModelToken('Event'),
-          useValue: MockEventModel
+          useValue: {
+            findOne: jest.fn().mockResolvedValue(null),
+            find: jest.fn().mockResolvedValue([mockEvent]),
+            create: jest.fn().mockResolvedValue(mockEvent)
+          }
         },
-      ],
+        {
+          provide: getModelToken('Inscription'),
+          useValue: {
+            find: jest.fn(),
+            create: jest.fn(),
+            deleteMany: jest.fn()
+          }
+        }
+      ]
     }).compile();
 
     service = module.get<EventService>(EventService);
@@ -46,26 +58,26 @@ describe('EventService', () => {
 
   describe('createEvent', () => {
     it('should create an event successfully', async () => {
-      MockEventModel.findOne.mockResolvedValue(null);
+      jest.spyOn(model, 'findOne').mockResolvedValueOnce(null);
       const result = await service.createEvent(mockEvent);
       expect(result).toEqual(mockEvent);
     });
 
     it('should throw BadRequestException when event already exists', async () => {
-      MockEventModel.findOne.mockResolvedValue(mockEvent);
+      jest.spyOn(model, 'findOne').mockResolvedValueOnce(mockEvent);
       await expect(service.createEvent(mockEvent)).rejects.toThrow(BadRequestException);
     });
   });
 
   describe('getEvents', () => {
     it('should return all events', async () => {
-      MockEventModel.find.mockResolvedValue([mockEvent]);
+      jest.spyOn(model, 'find').mockResolvedValueOnce([mockEvent]);
       const result = await service.getEvents('someId');
       expect(result).toEqual([mockEvent]);
     });
 
     it('should throw NotFoundException when no events exist', async () => {
-      MockEventModel.find.mockResolvedValue(null);
+      jest.spyOn(model, 'find').mockResolvedValueOnce([]);
       await expect(service.getEvents('someId')).rejects.toThrow(NotFoundException);
     });
   });

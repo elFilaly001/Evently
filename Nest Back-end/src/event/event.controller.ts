@@ -2,7 +2,7 @@ import { Controller, Get, Post, Put, Param, Body, Delete, UseGuards, Res } from 
 import { EventService } from './event.service';
 import { InscriptionService } from '../inscription/inscription.service';
 import { EventDto } from './event.dto';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { AuthGuard } from '../auth/auth.guard';
 import { Response } from 'express';
 import * as PDFDocument from 'pdfkit';
 

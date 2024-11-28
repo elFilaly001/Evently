@@ -39,9 +39,14 @@ describe('InscriptionService', () => {
         InscriptionService,
         {
           provide: getModelToken('Inscription'),
-          useValue: MockInscriptionModel
-        },
-      ],
+          useValue: {
+            findOne: jest.fn().mockResolvedValue(null),
+            find: jest.fn().mockResolvedValue([mockInscription]),
+            create: jest.fn().mockResolvedValue(mockInscription),
+            aggregate: jest.fn().mockResolvedValue([mockInscription])
+          }
+        }
+      ]
     }).compile();
 
     service = module.get<InscriptionService>(InscriptionService);
@@ -50,13 +55,13 @@ describe('InscriptionService', () => {
 
   describe('createInscription', () => {
     it('should create an inscription when it does not exist', async () => {
-      MockInscriptionModel.findOne.mockResolvedValue(null);
+      jest.spyOn(model, 'findOne').mockResolvedValueOnce(null);
       const result = await service.createInscription(mockInscription);
       expect(result).toEqual(mockInscription);
     });
 
     it('should throw BadRequestException when inscription already exists', async () => {
-      MockInscriptionModel.findOne.mockResolvedValue(mockInscription);
+      jest.spyOn(model, 'findOne').mockResolvedValueOnce(mockInscription);
       await expect(service.createInscription(mockInscription)).rejects.toThrow(BadRequestException);
     });
   });
@@ -75,7 +80,7 @@ describe('InscriptionService', () => {
 
     it('should throw NotFoundException when no inscriptions found', async () => {
       const eventId = new Types.ObjectId().toString();
-      MockInscriptionModel.find.mockResolvedValue([]);
+      jest.spyOn(model, 'aggregate').mockResolvedValueOnce([]);
       await expect(service.getInscriptions(eventId)).rejects.toThrow(NotFoundException);
     });
   });

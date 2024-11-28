@@ -30,11 +30,8 @@ export class InscriptionService {
             if (existingInscription) {
                 console.log(existingInscription);
                 throw new BadRequestException('This NID is already registered for this event');
-            }else{
-                const createdInscription = new this.inscriptionModel(inscription);
-                return await createdInscription.save();
             }
-            // return existingInscription;
+            return await this.inscriptionModel.create(inscription);
         } catch (error) {
             throw error;
         }

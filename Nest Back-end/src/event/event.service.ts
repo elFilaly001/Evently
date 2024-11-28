@@ -24,9 +24,7 @@ export class EventService {
             if (existingEvent) {
                 throw new BadRequestException('Event with this title already exists');
             }
-                const createdEvent = new this.eventModel(event);
-                return await createdEvent.save();
-            
+            return await this.eventModel.create(event);
         } catch (error) {
             throw error;
         }
