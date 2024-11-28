@@ -14,16 +14,16 @@ jobs:
     - uses: actions/checkout@v3
 
 
-     - name: Check Docker Hub Username
-         run: echo "Docker Hub Username is set"
-         env:
-           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+    - name: Check Docker Hub Username
+      run: echo "Docker Hub Username is set"
+      env:
+        DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
 
-       - name: Check Docker Hub Token
-         run: echo "Docker Hub Token is set"
-         env:
+    - name: Check Docker Hub Token
+      run: echo "Docker Hub Token is set"
+      env:
         DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-  
+
 
     # Setup Node.js
     - name: Setup Node.js
