@@ -56,7 +56,34 @@ export default function AddInscription() {
     }
     if (!formData.phone) newErrors.phone = "Phone is required";
     if (!formData.NID) newErrors.NID = "NID is required";
+    // Validate phone number format (assuming 8 digits)
+    if (formData.phone) {
+      const phoneRegex = /^\d{9}$/;
+      if (!phoneRegex.test(formData.phone)) {
+        newErrors.phone = "Phone number must be 9 digits";
+      }
+    }
 
+    // Additional email validation
+    if (formData.email) {
+      // Check for common email providers
+      const commonDomains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com'];
+      const emailDomain = formData.email.split('@')[1];
+      
+      if (!commonDomains.includes(emailDomain.toLowerCase())) {
+        newErrors.email = "Please use a common email provider (Gmail, Yahoo, Hotmail, Outlook)";
+      }
+
+      // Check minimum length
+      if (formData.email.length < 5) {
+        newErrors.email = "Email is too short";
+      }
+
+      // Check maximum length
+      if (formData.email.length > 50) {
+        newErrors.email = "Email is too long";
+      }
+    }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -78,7 +105,8 @@ export default function AddInscription() {
       toast.success("Inscription added successfully");
       setFormData(defaultFormData); // Reset form after successful submission
     } catch (error) {
-      console.error("Error adding inscription:", error);
+      // console.error("Error adding inscription:", error);
+      toast.error(error.response?.data?.message);   
     }
   };
 
@@ -98,7 +126,7 @@ export default function AddInscription() {
 
   return (
     <div className="h-screen overflow-hidden">
-        <Toaster />
+        <Toaster position="top-right" />
       <SidebarProvider>
         <AppSidebar 
           menuItems={menuItems}

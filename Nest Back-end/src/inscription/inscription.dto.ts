@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsObject, IsEmail } from "class-validator";
+import { IsString, IsNotEmpty, IsObject, IsEmail} from "class-validator";
 import { Type } from "class-transformer";
 import { ObjectId } from 'mongoose';
 

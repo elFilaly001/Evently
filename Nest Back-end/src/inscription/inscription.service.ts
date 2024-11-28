@@ -29,7 +29,7 @@ export class InscriptionService {
             });
             if (existingInscription) {
                 console.log(existingInscription);
-                throw new BadRequestException('Inscription already exists');
+                throw new BadRequestException('This NID is already registered for this event');
             }else{
                 const createdInscription = new this.inscriptionModel(inscription);
                 return await createdInscription.save();
@@ -96,23 +96,22 @@ export class InscriptionService {
         }
     }
 
-
-
-
     async updateInscription(id: string, inscription: InscriptionDto): Promise<InscriptionDto | null> {
-        try {
-            const updatedInscription = await this.inscriptionModel.findByIdAndUpdate(
-                id,
-                { $set: inscription },
-                { new: true }
-            );
-            if (!updatedInscription) {
-                throw new NotFoundException('Inscription not found');
-            }
-            return updatedInscription;
-        } catch (error) {
-            throw error;
+        // Check if name exists in other documents
+        const existingInscription = await this.inscriptionModel.findOne({
+            'participant.name': inscription.participant.name,
+            _id: { $ne: id } // Exclude current document
+        });
+
+        if (existingInscription) {
+            throw new BadRequestException('A participant with this name already exists');
         }
+
+        return this.inscriptionModel.findByIdAndUpdate(
+            id,
+            { $set: inscription },
+            { new: true }
+        );
     }
 
     async deleteInscription(id: string): Promise<Inscription | null> {

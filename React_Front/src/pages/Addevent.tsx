@@ -43,9 +43,9 @@ export default function AddEvent() {
                     creator: id || ""
                 });
             }
-        } catch (error) {
-            console.error("Error creating event:", error);
-            toast.error("Failed to create event");
+        } catch (error: any) {
+            // console.error("Error creating event:", error.response?.data?.message);
+            toast.error(error.response?.data?.message);
         }
     };
 

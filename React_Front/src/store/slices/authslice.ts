@@ -7,11 +7,15 @@ interface AuthState {
   isAuthenticated: boolean;
 }
 
+// Get user data from localStorage
+const storedUser = JSON.parse(localStorage.getItem('user')||'{}');
+const storedToken = localStorage.getItem('ticket');
+
 const initialState: AuthState = {
-  id: JSON.parse(localStorage.getItem('user') || '{}').id || null,
-  username: JSON.parse(localStorage.getItem('user') || '{}').username || "",
-  email: JSON.parse(localStorage.getItem('user') || '{}').email || "",
-  isAuthenticated: false,
+  id: storedUser.id || null,
+  username: storedUser.username || null,
+  email: storedUser.email || null,
+  isAuthenticated: !!storedToken, // Set based on token existence
 };
 
 const authSlice = createSlice({
@@ -22,7 +26,7 @@ const authSlice = createSlice({
       state.id = action.payload.id;
       state.username = action.payload.username;
       state.email = action.payload.email;
-      state.isAuthenticated = action.payload.isAuthenticated;
+      state.isAuthenticated = true;
       localStorage.setItem('user', JSON.stringify(action.payload));
     },
     logout: (state) => {
@@ -31,6 +35,7 @@ const authSlice = createSlice({
       state.email = null;
       state.isAuthenticated = false;
       localStorage.removeItem('user');
+      localStorage.removeItem('ticket');
     },
   },
 });

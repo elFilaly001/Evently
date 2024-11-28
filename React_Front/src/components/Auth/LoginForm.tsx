@@ -71,29 +71,31 @@ export default function LoginForm() {
         try {
             setLoading(true);
             if (validateForm() === false) {
-                return false
+                return false;
             }
 
             const response = await axiosInstance.post('/auth/login', data);
 
             if (response.status === 201) {
-                console.log(response.data.user);
-                dispatch(setUser(response.data.user));
-                localStorage.setItem("ticket", JSON.stringify(response.data.token));
+                const userData = {
+                    id: response.data.user.id,
+                    username: response.data.user.username,
+                    email: response.data.user.email,
+                    isAuthenticated: true
+                };
+                
+                localStorage.setItem("ticket", response.data.token);
+                dispatch(setUser(userData));
+                
                 toast.success("Logged in successfully");
-                setTimeout(() => {
-                    navigate("/Inscription");
-                }, 2500);
+                navigate("/events");
             }
         } catch (error: any) {
-            console.log(error);
-            if (error.response.data.message) {
+            if (error.response?.data?.message) {
                 toast.error(error.response.data.message);
             } else {
                 toast.error("An error occurred. Please try again.");
             }
-            console.log(error);
-
         } finally {
             setLoading(false);
         }
