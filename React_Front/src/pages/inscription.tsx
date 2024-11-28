@@ -165,17 +165,22 @@ export default function PageInscription() { // Fixed function name to start with
                                         className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                                         onChange={(e) => {
                                             const searchTerm = e.target.value.toLowerCase();
-                                            const filtered = inscriptions.filter((inscription) => {
-                                                const event = inscription.event;
+                                            const filteredInscriptions = inscriptions.filter((inscription) => {
+                                                if (!searchTerm) return true;  // Show all if no search term
+                                                
+                                                // Check if eventDetails exists and has at least one item
+                                                const event = inscription?.eventDetails?.[0];
                                                 if (!event) return false;
                                                 
+                                                const searchTermLower = searchTerm.toLowerCase();
+                                                
                                                 return (
-                                                    event.title.toLowerCase().includes(searchTerm) ||
-                                                    event.description.toLowerCase().includes(searchTerm) ||
-                                                    event.location.toLowerCase().includes(searchTerm)
+                                                    (inscription.participant?.name?.toLowerCase() || '').includes(searchTermLower) ||
+                                                    (inscription.participant?.email?.toLowerCase() || '').includes(searchTermLower) ||
+                                                    (inscription.participant?.NID?.toLowerCase() || '').includes(searchTermLower)
                                                 );
                                             });
-                                            setFilteredInscriptions(filtered);
+                                            setFilteredInscriptions(filteredInscriptions);
                                         }}
                                     />
                                 </div>
