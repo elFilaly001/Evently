@@ -24,6 +24,7 @@ export class LoginDto {
 }
 
 export class UserResponseDto {
-    username: string;
-    email: string;
+  id: string;
+  username: string;
+  email: string;
   }

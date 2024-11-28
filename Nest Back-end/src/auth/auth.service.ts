@@ -39,6 +39,7 @@ export class AuthService {
         throw new BadRequestException('Please check your password');
       }
       const userResponse: UserResponseDto = {
+        id: userExists._id.toString(),
         username: userExists.username,
         email: userExists.email,
       };

@@ -12,13 +12,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import PasswordInput from "@/components/ui/PasswordInput";
 import toast, { Toaster } from 'react-hot-toast';
-// import "react-toastify/dist/ReactToastify.css";
-import { Link} from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { axiosInstance } from "@/services/axiosInstence";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../store/slices/authslice";
-// import AuthContextProvider from "../../context/AuthContext";
-// import { AuthContext } from "../../context/AuthContext";
+
 
 
 
@@ -29,6 +27,7 @@ export default function LoginForm() {
     });
 
     const dispatch = useDispatch(); 
+    const navigate = useNavigate();
 
     const validateForm = (): boolean => {
 
@@ -72,26 +71,31 @@ export default function LoginForm() {
         try {
             setLoading(true);
             if (validateForm() === false) {
-                return false
+                return false;
             }
 
             const response = await axiosInstance.post('/auth/login', data);
 
             if (response.status === 201) {
-                console.log(response.data);
-                dispatch(setUser(response.data.user));
-                localStorage.setItem("token", JSON.stringify(response.data.token));
+                const userData = {
+                    id: response.data.user.id,
+                    username: response.data.user.username,
+                    email: response.data.user.email,
+                    isAuthenticated: true
+                };
+                
+                localStorage.setItem("ticket", response.data.token);
+                dispatch(setUser(userData));
+                
                 toast.success("Logged in successfully");
+                navigate("/events");
             }
         } catch (error: any) {
-            console.log(error);
-            if (error.response.data.message) {
+            if (error.response?.data?.message) {
                 toast.error(error.response.data.message);
             } else {
                 toast.error("An error occurred. Please try again.");
             }
-            console.log(error);
-
         } finally {
             setLoading(false);
         }
