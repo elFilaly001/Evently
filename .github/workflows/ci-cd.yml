@@ -55,7 +55,7 @@ jobs:
       with:
         context: ./Nest Back-end
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/evently:backend
 
     # Build and push frontend
     - name: Build and push Frontend
@@ -63,4 +63,4 @@ jobs:
       with:
         context: ./React_Front
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest 
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/evently:frontend 
