@@ -39,14 +39,14 @@ jobs:
 
     # Build and push Docker images
     - name: Login to Docker Hub
-      uses: docker/login-action@v2
+      uses: docker/login-action@v3
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
     # Build and push backend
     - name: Build and push Backend
-      uses: docker/build-push-action@v4
+      uses: docker/build-push-action@v6
       with:
         context: ./Nest Back-end
         push: true
@@ -54,7 +54,7 @@ jobs:
 
     # Build and push frontend
     - name: Build and push Frontend
-      uses: docker/build-push-action@v4
+      uses: docker/build-push-action@v6
       with:
         context: ./React_Front
         push: true
