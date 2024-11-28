@@ -36,7 +36,7 @@ export class InscriptionService {
             }
             // return existingInscription;
         } catch (error) {
-            throw new BadRequestException(error);
+            throw error;
         }
     }
 
@@ -44,19 +44,34 @@ export class InscriptionService {
         try {
             // Validate if the id is a valid MongoDB ObjectId
             if (!Types.ObjectId.isValid(id)) {
-                throw new BadRequestException('Invalid event ID format');
+                throw new BadRequestException('Invalid user ID format');
             }
-            
-            const inscriptions = await this.inscriptionModel.find({ event: id });
+
+            // Find all inscriptions for events created by this user
+            const inscriptions = await this.inscriptionModel
+                .aggregate([
+                    {
+                        $lookup: {
+                            from: 'events',
+                            localField: 'event',
+                            foreignField: '_id',
+                            as: 'eventDetails'
+                        }
+                    },
+                    {
+                        $match: {
+                            'eventDetails.creator': new Types.ObjectId(id)
+                        }
+                    }
+                ]);
+
             if (!inscriptions || inscriptions.length === 0) {
-                throw new NotFoundException('Inscriptions not found');
+                throw new NotFoundException('No inscriptions found for events created by this user');
             }
+
             return inscriptions;
         } catch (error) {
-            if (error instanceof BadRequestException || error instanceof NotFoundException) {
-                throw error;
-            }
-            throw new BadRequestException(error);
+            throw error;
         }
     }
 
@@ -68,7 +83,7 @@ export class InscriptionService {
             }
             return inscription;
         } catch (error) {
-            throw new BadRequestException(error);
+            throw error;
         }
     }
 
@@ -84,10 +99,7 @@ export class InscriptionService {
             }
             return updatedInscription;
         } catch (error) {
-            if (error instanceof NotFoundException) {
-                throw error;
-            }
-            throw new BadRequestException(error);
+            throw error;
         }
     }
 
@@ -99,7 +111,7 @@ export class InscriptionService {
             }
             return deletedInscription;
         } catch (error) {
-            throw new BadRequestException(error);
+            throw error;
         }
     }
 }

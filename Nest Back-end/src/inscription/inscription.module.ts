@@ -18,7 +18,7 @@ import { AuthMiddleware } from 'src/auth/auth.middleware';
     controllers: [InscriptionController],
     exports: [InscriptionService]
 })
-export class InscriptionModule {
+export class InscriptionModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {
         consumer.apply(AuthMiddleware).forRoutes('api/inscription');
     }

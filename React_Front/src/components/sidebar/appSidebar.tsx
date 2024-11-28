@@ -53,11 +53,11 @@ export default function AppSidebar({ menuItems, userName, userEmail }: AppSideba
                 <SidebarMenuSub>
                   <SidebarMenuSubItem>
                     {item.items.map((subItem, subIndex) => (
-                      <SidebarMenuSubButton key={subIndex}>
-                        <Link to={`/${item.link?.[subIndex]}`}>
+                      <Link to={`/${item.link?.[subIndex]}`}>
+                        <SidebarMenuSubButton key={subIndex}>
                           {subItem}
-                        </Link>
-                      </SidebarMenuSubButton>
+                        </SidebarMenuSubButton>
+                      </Link>
                     ))}
                   </SidebarMenuSubItem>
                 </SidebarMenuSub>
@@ -84,7 +84,7 @@ export default function AppSidebar({ menuItems, userName, userEmail }: AppSideba
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56 mb-5" side="right" align="start">
             <DropdownMenuItem className="cursor-pointer">
-              <button 
+              <button
                 onClick={handleLogout}
                 className="w-full text-left cursor-pointer hover:bg-accent hover:text-accent-foreground"
               >

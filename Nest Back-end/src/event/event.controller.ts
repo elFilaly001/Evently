@@ -10,6 +10,7 @@ export class EventController {
 
     @Post("addEvent")
     async createEvent(@Body() event: EventDto): Promise<EventDto> {
+        console.log("event controller",event);
         return this.eventService.createEvent(event);
     }
 

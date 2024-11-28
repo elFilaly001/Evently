@@ -8,10 +8,9 @@ export const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
     (config) => {
-        config.withCredentials = true
         const token = localStorage.getItem('ticket')
         if (token) {
-            config.headers.Authorization = `Bearer ${token}`
+            config.headers.authorization = `Bearer ${token}`
         }
         return config
     },

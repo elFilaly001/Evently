@@ -18,7 +18,7 @@ export class InscriptionController {
             }
             return createdInscription;
         } catch (error) {
-            throw new BadRequestException(error);
+            throw error;
         }
     }
 
@@ -31,7 +31,7 @@ export class InscriptionController {
             }
             return inscriptions;
         } catch (error) {
-            throw new BadRequestException(error);
+            throw error;
         }
     }
 
@@ -66,7 +66,7 @@ export class InscriptionController {
             if (error instanceof BadRequestException || error instanceof NotFoundException) {
                 throw error;
             }
-            throw new BadRequestException(error);
+            throw error;
         }
     }
 

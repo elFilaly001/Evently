@@ -42,6 +42,7 @@ export default function PageInscription() { // Fixed function name to start with
     const [selectedInscription, setSelectedInscription] = useState<Inscription | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+    const [error, setError] = useState<string | null>(null);
     const [updateForm, setUpdateForm] = useState<Participant & {eventId?: string}>({
         name: '',
         email: '',
@@ -59,12 +60,29 @@ export default function PageInscription() { // Fixed function name to start with
                 // Fetch all events
                 const eventsResponse = await axiosInstance.get(`/event/${id}`);
                 const eventsData = eventsResponse.data;
+                
+                if (!eventsData || eventsData.length === 0) {
+                    setError("No events found");
+                    return;
+                }
+                
                 dispatch(setEvents(eventsData));
+                
+                if (!inscriptionsData || inscriptionsData.length === 0) {
+                    setError("No inscriptions found");
+                    return;
+                }
                 
                 dispatch(setInscriptions(inscriptionsData));
                 setFilteredInscriptions(inscriptionsData);
-            } catch (error) {
-                console.error('Error fetching data:', error);
+                setError(null);
+            } catch (error: any) {
+                if (error.response?.status === 404) {
+                    setError("No inscriptions found");
+                } else {
+                    console.error('Error fetching data:', error);
+                    setError("An error occurred while fetching data");
+                }
             }
         };
         
@@ -97,6 +115,7 @@ export default function PageInscription() { // Fixed function name to start with
             dispatch(setInscriptions(inscriptionsResponse.data));
             setFilteredInscriptions(inscriptionsResponse.data);
             setIsUpdateModalOpen(false);
+            setError(null);
         } catch (error) {
             console.error('Error updating inscription:', error);
         }
@@ -105,8 +124,8 @@ export default function PageInscription() { // Fixed function name to start with
     const menuItems = [
         {
             title: "Inscriptions",
-            items: ["Inscriptions", "Inscriptions by event", "Add inscription"],
-            link: ["Inscription", "InscriptionsByEvent", "AddInscription"]
+            items: ["Inscriptions", "Add inscription"],
+            link: ["Inscription", "AddInscription"]
         },
         {
             title: "Events",
@@ -117,11 +136,9 @@ export default function PageInscription() { // Fixed function name to start with
 
     if (!id) return null;
 
-
     console.log("inscriptions",inscriptions);
     console.log("events",events);
     
-
     return (
         <div className="h-screen overflow-hidden">
             <SidebarProvider>
@@ -134,91 +151,97 @@ export default function PageInscription() { // Fixed function name to start with
                     <div className="flex items-center justify-between">
                         <h2 className="text-3xl font-bold tracking-tight">Inscriptions</h2>
                     </div>
-                    <div className="rounded-md border">
-                        <div className="p-4">
-                            <div className="flex items-center gap-2">
-                                <input
-                                    type="text"
-                                    placeholder="Filter events..."
-                                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                    onChange={(e) => {
-                                        const searchTerm = e.target.value.toLowerCase();
-                                        const filtered = inscriptions.filter((inscription) => {
-                                            const event = inscription.event;
-                                            if (!event) return false;
-                                            
-                                            return (
-                                                event.title.toLowerCase().includes(searchTerm) ||
-                                                event.description.toLowerCase().includes(searchTerm) ||
-                                                event.location.toLowerCase().includes(searchTerm)
-                                            );
-                                        });
-                                        setFilteredInscriptions(filtered);
-                                    }}
-                                />
+                    {error ? (
+                        <div className="rounded-md border p-4 text-center text-gray-500">
+                            {error}
+                        </div>
+                    ) : (
+                        <div className="rounded-md border">
+                            <div className="p-4">
+                                <div className="flex items-center gap-2">
+                                    <input
+                                        type="text"
+                                        placeholder="Filter events..."
+                                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                        onChange={(e) => {
+                                            const searchTerm = e.target.value.toLowerCase();
+                                            const filtered = inscriptions.filter((inscription) => {
+                                                const event = inscription.event;
+                                                if (!event) return false;
+                                                
+                                                return (
+                                                    event.title.toLowerCase().includes(searchTerm) ||
+                                                    event.description.toLowerCase().includes(searchTerm) ||
+                                                    event.location.toLowerCase().includes(searchTerm)
+                                                );
+                                            });
+                                            setFilteredInscriptions(filtered);
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                            <div className="relative w-full overflow-auto">
+                                <table className="w-full caption-bottom text-sm">
+                                    <thead className="[&_tr]:border-b">
+                                        <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                            <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Event</th>
+                                            <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Name</th>
+                                            <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Email</th>
+                                            <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Phone</th>
+                                            <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">NID</th>
+                                            <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Actions</th>
+                                            <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Manage</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="[&_tr:last-child]:border-0">
+                                        {filteredInscriptions.map((inscription) => (
+                                            <tr key={inscription._id} className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                                <td className="p-4 align-middle">{inscription.eventDetails[0].title}</td>
+                                                <td className="p-4 align-middle">{inscription.participant.name}</td>
+                                                <td className="p-4 align-middle">{inscription.participant.email}</td>
+                                                <td className="p-4 align-middle">{inscription.participant.phone}</td>
+                                                <td className="p-4 align-middle">{inscription.participant.NID}</td>
+                                                <td className="p-4 align-middle">
+                                                    <button 
+                                                        onClick={() => {
+                                                            setSelectedInscription(inscription);
+                                                            setIsModalOpen(true);
+                                                        }}
+                                                        className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
+                                                    >
+                                                        View Event
+                                                    </button>
+                                                </td>
+                                                <td className="p-4 align-middle">
+                                                    <div className="flex gap-2">
+                                                        <button 
+                                                            onClick={() => handleUpdateClick(inscription)}
+                                                            className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-blue-500 text-white hover:bg-blue-600 h-10 px-4 py-2"
+                                                        >
+                                                            Update
+                                                        </button>
+                                                        <form onSubmit={async (e) => {
+                                                            e.preventDefault();
+                                                            await axiosInstance.delete(`/inscription/${inscription._id}`);
+                                                            dispatch(deleteInscription(inscription._id));
+                                                            setFilteredInscriptions(prev => prev.filter(item => item._id !== inscription._id));
+                                                        }}>
+                                                            <button 
+                                                                type="submit"
+                                                                className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-red-500 text-white hover:bg-red-600 h-10 px-4 py-2"
+                                                            >
+                                                                Delete
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
-                        <div className="relative w-full overflow-auto">
-                            <table className="w-full caption-bottom text-sm">
-                                <thead className="[&_tr]:border-b">
-                                    <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Event</th>
-                                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Name</th>
-                                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Email</th>
-                                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Phone</th>
-                                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">NID</th>
-                                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Actions</th>
-                                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Manage</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="[&_tr:last-child]:border-0">
-                                    {filteredInscriptions.map((inscription) => (
-                                        <tr key={inscription._id} className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                                            <td className="p-4 align-middle">{inscription.eventDetails[0].title}</td>
-                                            <td className="p-4 align-middle">{inscription.participant.name}</td>
-                                            <td className="p-4 align-middle">{inscription.participant.email}</td>
-                                            <td className="p-4 align-middle">{inscription.participant.phone}</td>
-                                            <td className="p-4 align-middle">{inscription.participant.NID}</td>
-                                            <td className="p-4 align-middle">
-                                                <button 
-                                                    onClick={() => {
-                                                        setSelectedInscription(inscription);
-                                                        setIsModalOpen(true);
-                                                    }}
-                                                    className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
-                                                >
-                                                    View Event
-                                                </button>
-                                            </td>
-                                            <td className="p-4 align-middle">
-                                                <div className="flex gap-2">
-                                                    <button 
-                                                        onClick={() => handleUpdateClick(inscription)}
-                                                        className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-blue-500 text-white hover:bg-blue-600 h-10 px-4 py-2"
-                                                    >
-                                                        Update
-                                                    </button>
-                                                    <form onSubmit={async (e) => {
-                                                        e.preventDefault();
-                                                        await axiosInstance.delete(`/inscription/${inscription._id}`);
-                                                        dispatch(deleteInscription(inscription._id));
-                                                        setFilteredInscriptions(prev => prev.filter(item => item._id !== inscription._id));
-                                                    }}>
-                                                        <button 
-                                                            type="submit"
-                                                            className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-red-500 text-white hover:bg-red-600 h-10 px-4 py-2"
-                                                        >
-                                                            Delete
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                    )}
                 </div>
 
                 {/* Event Details Modal */}
