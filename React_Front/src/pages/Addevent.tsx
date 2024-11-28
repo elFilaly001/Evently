@@ -26,11 +26,6 @@ export default function AddEvent() {
           title: "Events", 
           items: ["All Events", "Add Event"],
           link: ["Events", "AddEvent"]
-        },
-        {
-            title: "PDF",
-            items: ["Download PDF"],
-            link: ["PDF"]
         }
     ];
 

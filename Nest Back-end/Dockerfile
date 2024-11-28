@@ -7,6 +7,11 @@ WORKDIR /usr/src/app
 # Install NestJS CLI globally
 RUN npm install -g @nestjs/cli
 
+# Use apk instead of apt-get for Alpine Linux
+RUN apk add --no-cache \
+    fontconfig \
+    ttf-liberation
+
 # Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
 

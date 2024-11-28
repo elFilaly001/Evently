@@ -32,6 +32,18 @@ export class EventService {
         }
     }
 
+    async getEventById(id: string): Promise<EventDto | null> {
+        try {
+            const event = await this.eventModel.findById(id);
+            if (!event) {
+                throw new NotFoundException('Event not found');
+            }
+            return event;
+        } catch (error) {
+            throw error;
+        }
+    }
+
     async getEventByTitle(title: string): Promise<EventDto[]> {
         try {
             const event = await this.eventModel.find({title : title});

@@ -40,6 +40,15 @@ export class InscriptionService {
         }
     }
 
+    async getInscriptionsByEventId(eventId: string): Promise<Inscription[]> {
+        try {
+            const inscriptions = await this.inscriptionModel.find({ event: eventId });
+            return inscriptions;
+        } catch (error) {
+            throw error;
+        }
+    }
+
     async getInscriptions(id: string): Promise<Inscription[]> {
         try {
             // Validate if the id is a valid MongoDB ObjectId
@@ -86,6 +95,9 @@ export class InscriptionService {
             throw error;
         }
     }
+
+
+
 
     async updateInscription(id: string, inscription: InscriptionDto): Promise<InscriptionDto | null> {
         try {
