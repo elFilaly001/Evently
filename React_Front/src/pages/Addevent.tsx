@@ -11,7 +11,7 @@ export default function AddEvent() {
     const [formData, setFormData] = useState({
         title: "",
         description: "",
-        date: "",
+        date: Date.now(),
         location: "",
         creator: id || ""
     });
@@ -38,7 +38,7 @@ export default function AddEvent() {
                 setFormData({
                     title: "",
                     description: "",
-                    date: "",
+                    date: Date.now(),
                     location: "",
                     creator: id || ""
                 });
@@ -64,7 +64,7 @@ export default function AddEvent() {
                             <h1 className="text-2xl font-bold mb-8">Add New Event</h1>
                             <form onSubmit={handleSubmit} className="space-y-6">
                                 <div className="space-y-2">
-                                    <label className="block text-sm font-medium text-gray-700">Title</label>
+                                    <label className="block text-sm font-medium text-gray-700 text-left ml-2">Title</label>
                                     <input
                                         type="text"
                                         value={formData.title}
@@ -74,7 +74,7 @@ export default function AddEvent() {
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="block text-sm font-medium text-gray-700">Description</label>
+                                    <label className="block text-sm font-medium text-gray-700 text-left ml-2">Description</label>
                                     <textarea
                                         value={formData.description}
                                         onChange={(e) => setFormData({...formData, description: e.target.value})}
@@ -83,17 +83,17 @@ export default function AddEvent() {
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="block text-sm font-medium text-gray-700">Date</label>
+                                    <label className="block text-sm font-medium text-gray-700 text-left ml-2">Date</label>
                                     <input
                                         type="date"
-                                        value={formData.date}
+                                        value={new Date(formData.date).toISOString().split('T')[0]}
                                         onChange={(e) => setFormData({...formData, date: e.target.value})}
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
                                         required
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="block text-sm font-medium text-gray-700">Location</label>
+                                    <label className="block text-sm font-medium text-gray-700 text-left ml-2">Location</label>
                                     <input
                                         type="text"
                                         value={formData.location}

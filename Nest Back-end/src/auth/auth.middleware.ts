@@ -22,9 +22,9 @@ export class AuthMiddleware implements NestMiddleware {
       if (!Types.ObjectId.isValid(decoded.sub)) {
         throw new UnauthorizedException("Invalid token");
       }
+      next();
     } catch (error) {
       throw new UnauthorizedException("Invalid token");
     }
-    next();
   }
 }

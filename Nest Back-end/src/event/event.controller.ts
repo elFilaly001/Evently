@@ -1,4 +1,5 @@
 import { Controller, Get, Post, Put, Param, Body, Delete, UseGuards, Res } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { EventService } from './event.service';
 import { InscriptionService } from '../inscription/inscription.service';
 import { EventDto } from './event.dto';
@@ -6,6 +7,8 @@ import { AuthGuard } from '../auth/auth.guard';
 import { Response } from 'express';
 import * as PDFDocument from 'pdfkit';
 
+@ApiTags('Events')
+@ApiBearerAuth()
 @Controller('api/event')
 @UseGuards(AuthGuard)
 export class EventController {
@@ -15,32 +18,41 @@ export class EventController {
     ) {}
 
     @Post("addEvent")
+    @ApiOperation({ summary: 'Create a new event' })
+    @ApiResponse({ status: 201, description: 'Event successfully created', type: EventDto })
+    @ApiResponse({ status: 400, description: 'Bad request' })
     async createEvent(@Body() event: EventDto): Promise<EventDto> {
-        console.log("event controller",event);
         return this.eventService.createEvent(event);
     }
 
     @Get(":id")
+    @ApiOperation({ summary: 'Get all events for a user' })
+    @ApiResponse({ status: 200, description: 'Returns all events', type: [EventDto] })
+    @ApiResponse({ status: 404, description: 'Events not found' })
     async getEvents(@Param('id') id: string): Promise<EventDto[]> {
         return this.eventService.getEvents(id);
     }
 
-    // @Get("updateEvent")
-    // async getEventById(@Param('id') id: string): Promise<EventDto[]> {
-    //     return this.eventService.getEventById(id);
-    // }
-
     @Put(":id")
+    @ApiOperation({ summary: 'Update an event' })
+    @ApiResponse({ status: 200, description: 'Event updated successfully', type: EventDto })
+    @ApiResponse({ status: 404, description: 'Event not found' })
     async updateEvent(@Param('id') id: string, @Body() event: EventDto): Promise<EventDto> {
         return this.eventService.updateEvent(id, event);
     }
 
     @Delete(':id')
+    @ApiOperation({ summary: 'Delete an event' })
+    @ApiResponse({ status: 200, description: 'Event deleted successfully' })
+    @ApiResponse({ status: 404, description: 'Event not found' })
     async deleteEvent(@Param('id') id: string): Promise<EventDto> {
         return this.eventService.deleteEvent(id);
     }
 
     @Get('download/:id')
+    @ApiOperation({ summary: 'Download event details as PDF' })
+    @ApiResponse({ status: 200, description: 'Returns PDF file' })
+    @ApiResponse({ status: 404, description: 'Event not found' })
     async downloadEventPDF(@Param('id') id: string, @Res() res: Response) {
         const event = await this.eventService.getEventById(id);
         const inscriptions = await this.inscriptionService.getInscriptionsByEventId(id);

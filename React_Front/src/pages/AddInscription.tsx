@@ -140,7 +140,7 @@ export default function AddInscription() {
           
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-1">
+              <label className="block text-sm font-medium mb-1 text-left ml-2">
                 Event <span className="text-red-500">*</span>
               </label>
               <select 
@@ -160,7 +160,7 @@ export default function AddInscription() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1">
+              <label  className="block text-sm font-medium mb-1 text-left ml-2">
                 Name <span className="text-red-500">*</span>
               </label>
               <input
@@ -174,7 +174,7 @@ export default function AddInscription() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1">
+              <label className="block text-sm font-medium mb-1 text-left ml-2">
                 Email <span className="text-red-500">*</span>
               </label>
               <input
@@ -188,7 +188,7 @@ export default function AddInscription() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1">
+              <label className="block text-sm font-medium mb-1 text-left ml-2">
                 Phone <span className="text-red-500">*</span>
               </label>
               <input
@@ -202,7 +202,7 @@ export default function AddInscription() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1">
+              <label className="block text-sm font-medium mb-1 text-left ml-2">
                 NID <span className="text-red-500">*</span>
               </label>
               <input
@@ -215,12 +215,14 @@ export default function AddInscription() {
               {errors.NID && <p className="text-red-500 text-sm mt-1">{errors.NID}</p>}
             </div>
 
-            <button
-              type="submit"
-              className="bg-primary text-white px-4 py-2 rounded-md hover:bg-primary/90"
-            >
-              Add Inscription
-            </button>
+            <div className="flex justify-end">
+              <button
+                type="submit"
+                className="bg-primary text-white px-4 py-2 rounded-md hover:bg-primary/90"
+              >
+                Add Inscription
+              </button>
+            </div>
           </form>
         </div>
       </SidebarProvider>
