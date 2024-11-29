@@ -9,7 +9,7 @@ import * as PDFDocument from 'pdfkit';
 
 @ApiTags('Events')
 @ApiBearerAuth()
-@Controller('api/event')
+@Controller('event')
 @UseGuards(AuthGuard)
 export class EventController {
     constructor(
@@ -25,10 +25,10 @@ export class EventController {
         return this.eventService.createEvent(event);
     }
 
-    @Get(":id")
     @ApiOperation({ summary: 'Get all events for a user' })
     @ApiResponse({ status: 200, description: 'Returns all events', type: [EventDto] })
     @ApiResponse({ status: 404, description: 'Events not found' })
+    @Get(":id")
     async getEvents(@Param('id') id: string): Promise<EventDto[]> {
         return this.eventService.getEvents(id);
     }
