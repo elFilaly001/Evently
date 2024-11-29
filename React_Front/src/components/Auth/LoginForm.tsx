@@ -88,7 +88,7 @@ export default function LoginForm() {
                 dispatch(setUser(userData));
                 
                 toast.success("Logged in successfully");
-                navigate("/events");
+                navigate("/inscription");
             }
         } catch (error: any) {
             if (error.response?.data?.message) {
@@ -110,13 +110,13 @@ export default function LoginForm() {
             <Card className="w-[500px]">
                 <form onSubmit={handleSubmit}>
                     <CardHeader>
-                        <CardTitle>Login</CardTitle>
+                        <CardTitle className="text-center text-2xl">Login</CardTitle>
                         <CardDescription>Welcome back!</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <div className="grid w-full items-center gap-4">
                             <div className="flex flex-col space-y-1.5">
-                                <Label htmlFor="email" className="">Email</Label>
+                                <Label htmlFor="email" className="text-left ml-2">Email</Label>
                                 <Input
                                     id="email"
                                     name="email"
@@ -126,7 +126,7 @@ export default function LoginForm() {
                                 />
                             </div>
                             <div className="flex flex-col space-y-1.5">
-                                <Label htmlFor="password">Password</Label>
+                                <Label htmlFor="password" className="text-left ml-2">Password</Label>
                                 <PasswordInput
                                     id="password"
                                     name="password"
