@@ -7,7 +7,7 @@ import { AuthGuard } from '../auth/auth.guard';
 
 @ApiTags('Inscriptions')
 @ApiBearerAuth()
-@Controller('api/inscription')
+@Controller('inscription')
 @UseGuards(AuthGuard)
 export class InscriptionController {
     constructor(private readonly inscriptionService: InscriptionService) {}

@@ -2,6 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { getModelToken } from '@nestjs/mongoose';
+import { sign, verify } from 'crypto';
+import { Model, Types } from 'mongoose';
+import { RegisterDto } from './auth.dto';
+import * as bcrypt from 'bcryptjs'
 
 describe('AuthService', () => {
   let service: AuthService;
