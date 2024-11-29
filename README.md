@@ -132,45 +132,45 @@ npm test
 
 ### Project Structure
 
-### Back-end
-src/
-├── auth/ # Authentication module
-|    ├── controllers/ # controllers
-|    ├── dto/ # data transfer objects
-|    ├── entities/ # entities
-|    ├── guards/ # guards
-|    ├── services/ # services
-|    └── auth.module.ts # module
-├── event/ # Event management module
-|    ├── controllers/ # controllers
-|    ├── dto/ # data transfer objects
-|    ├── entities/ # entities
-|    ├── guards/ # guards
-|    ├── services/ # services
-|    └── event.module.ts # module
-├── inscription/ # Registration module
-|    ├── controllers/ # controllers
-|    ├── dto/ # data transfer objects
-|    ├── entities/ # entities
-|    ├── guards/ # guards
-|    ├── services/ # services
-|    └── inscription.module.ts # module
-├── app.module.ts # Main application module
-└── main.ts # Application entry point
+### Back-end<br>
+src/<br>
+├── auth/ # Authentication module<br>
+|    ├── controllers/ # controllers<br>
+|    ├── dto/ # data transfer objects<br>
+|    ├── entities/ # entities<br>
+|    ├── guards/ # guards<br>
+|    ├── services/ # services<br>
+|    └── auth.module.ts # module<br>
+├── event/ # Event management module<br>
+|    ├── controllers/ # controllers<br>
+|    ├── dto/ # data transfer objects<br>
+|    ├── entities/ # entities<br>
+|    ├── guards/ # guards<br>
+|    ├── services/ # services<br>
+|    └── event.module.ts # module<br>
+├── inscription/ # Registration module<br>
+|    ├── controllers/ # controllers<br>
+|    ├── dto/ # data transfer objects<br>
+|    ├── entities/ # entities<br>
+|    ├── guards/ # guards<br>
+|    ├── services/ # services<br>
+|    └── inscription.module.ts # module<br>
+├── app.module.ts # Main application module<br>
+└── main.ts # Application entry point<br>
 
-### Front-end
-src/
-├── components/ # UI components
-├── assets/ # Static assets
-├── services/ # services
-|    └── axiosInstance.ts # axios instance
-├── pages/ # pages
-├── router/ # router
-|   ├── protected/ # protected routes
-|   └── router.ts # router
-├── store/ # Redux store
-|    ├── slices/ # slices
-|    └── store.ts # store
-├── App.vue # Main application component
-└── main.js # Application entry point
+### Front-end<br>
+src/<br>
 
+├── components/ # UI components<br>
+├── assets/ # Static assets<br>
+├── services/ # services<br>
+|    └── axiosInstance.ts # axios instance<br>
+├── pages/ # pages<br>
+├── router/ # router<br>
+|   ├── protected/ # protected routes<br>
+|   └── router.ts # router<br>
+├── store/ # Redux store<br>
+|    ├── slices/ # slices<br>
+|    └── store.ts # store<br>
+├── App.vue # Main application component<br>
+└── main.js # Application entry point<br>
