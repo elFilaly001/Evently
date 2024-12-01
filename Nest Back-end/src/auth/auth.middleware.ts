@@ -11,20 +11,6 @@ export class AuthMiddleware implements NestMiddleware {
   ) {}
   
   async use(req: any, res: any, next: () => void) {
-    const token = req.headers.authorization?.split(' ')[1];
-    if (!token) {
-      throw new UnauthorizedException("Token is missing");
-    }
-    try {
-      const decoded = await this.jwtService.verify(token, {
-        secret: this.configService.get('JWT_SECRET')
-      });
-      if (!Types.ObjectId.isValid(decoded.sub)) {
-        throw new UnauthorizedException("Invalid token");
-      }
-      next();
-    } catch (error) {
-      throw new UnauthorizedException("Invalid token");
-    }
+    next();
   }
 }

@@ -17,7 +17,7 @@ import { AuthMiddleware } from './auth.middleware';
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET'),
-        signOptions: { expiresIn: '1h' },
+        signOptions: { expiresIn: '1m' },
       }),
     }),
   ],

@@ -13,7 +13,8 @@ import { Label } from "@/components/ui/label";
 import PasswordInput from "@/components/ui/PasswordInput";
 import { Toaster, toast } from "react-hot-toast";
 import { Link } from 'react-router-dom';
-import { axiosInstance } from "@/services/axiosInstence";
+// import { axiosInstance } from "@/services/axiosInstence";
+import axios from "axios";
 
 
 export default function RegisterForm() {
@@ -101,7 +102,7 @@ export default function RegisterForm() {
 
       if (data.password === data.confirm_password) {
         console.log(data);
-        const response = await axiosInstance.post('/auth/register', { username: data.username, email: data.email, phone: data.phone, password: data.password });
+        const response = await axios.post(import.meta.env.VITE_BACKEND_URL +'/api/auth/register', { username: data.username, email: data.email, phone: data.phone, password: data.password });
         if (response.status === 201) {
           toast.success("Registration successful! Please check your email for verification.");
         } else {

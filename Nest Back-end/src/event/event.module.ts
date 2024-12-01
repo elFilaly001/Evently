@@ -21,8 +21,6 @@ import { AuthModule } from 'src/auth/auth.module';
   controllers: [EventController],
   exports: [EventService]
 })
-export class EventModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes('api/event');
-}
+export class EventModule{
+  
 }

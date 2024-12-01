@@ -97,11 +97,17 @@ export default function AddInscription() {
 
     try {
       const { eventId, ...participantData } = formData;
-      await axiosInstance.post("/inscription/addInscription", {
+      const response = await axiosInstance.post("/inscription/addInscription", {
         event: eventId,
         participant: participantData
       });
 
+      if(response.status === 401){
+                toast.error("Unauthorized");
+                setTimeout(() => {
+                    navigate("/login");
+                }, 2500);
+            }
       toast.success("Inscription added successfully");
       setFormData(defaultFormData); // Reset form after successful submission
     } catch (error) {

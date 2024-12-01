@@ -38,7 +38,7 @@ function Routers() {
         } />
 
         {/* Redirect root to events if authenticated, otherwise to login */}
-        <Route path="/" element={<Navigate to="/events" replace />} />
+        <Route path="/" element={<Navigate to="/inscription" replace />} />
       </Routes>
     </Router> 
   );

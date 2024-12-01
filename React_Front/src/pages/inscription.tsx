@@ -7,7 +7,8 @@ import { axiosInstance } from "@/services/axiosInstence";
 import { Dialog } from "@headlessui/react";
 import { setEvents } from "@/store/slices/eventSlice";
 import { deleteInscription, setInscriptions } from "@/store/slices/InscriptionsSlice";
-
+import { toast, Toaster } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 interface Event {
     _id: string;
     title: string;
@@ -33,7 +34,9 @@ interface Inscription {
     eventDetails: Event;
 }
 
-export default function PageInscription() { // Fixed function name to start with capital letter
+export default function PageInscription() {
+    const navigate = useNavigate();
+    // Fixed function name to start with capital letter
     const dispatch = useDispatch();
     const { id, username, email } = useSelector((state: RootState) => state.auth);
     const inscriptions = useSelector((state: RootState) => state.inscription.inscriptions);
@@ -65,7 +68,6 @@ export default function PageInscription() { // Fixed function name to start with
                     setError("No events found");
                     return;
                 }
-                
                 dispatch(setEvents(eventsData));
                 
                 if (!inscriptionsData || inscriptionsData.length === 0) {
@@ -79,6 +81,11 @@ export default function PageInscription() { // Fixed function name to start with
             } catch (error: any) {
                 if (error.response?.status === 404) {
                     setError("No inscriptions found");
+                } else if(error.response?.status === 401){
+                    toast.error("Unauthorized");
+                    setTimeout(() => {
+                        navigate("/login");
+                    }, 2500);
                 } else {
                     console.error('Error fetching data:', error);
                     setError("An error occurred while fetching data");
@@ -141,6 +148,7 @@ export default function PageInscription() { // Fixed function name to start with
     
     return (
         <div className="h-screen overflow-hidden">
+            <Toaster />
             <SidebarProvider>
                 <AppSidebar 
                     menuItems={menuItems}
