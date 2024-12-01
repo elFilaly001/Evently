@@ -6,6 +6,7 @@ import AppSidebar from "@/components/sidebar/appSidebar";
 import { axiosInstance } from "@/services/axiosInstence";
 import { setEvents } from "@/store/slices/eventSlice";
 import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 // import { setUser } from "@/store/slices/authslice";
 
 
@@ -41,12 +42,20 @@ export default function Events() {
         fetchEvents();
     }, [dispatch]);
 
+    const navigate = useNavigate();
 
     const handleDownloadPDF = async (eventId: string) => {
         try {
             const response = await axiosInstance.get(`/event/download/${eventId}`, {
                 responseType: 'blob'
             });
+
+            if(response.status === 401){
+                toast.error("Unauthorized");
+                setTimeout(() => {
+                    navigate("/login");
+                }, 2500);
+            }
 
             // Create blob link to download
             const url =  window.URL.createObjectURL(new Blob([response.data]));

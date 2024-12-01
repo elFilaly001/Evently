@@ -13,9 +13,10 @@ import { Label } from "@/components/ui/label";
 import PasswordInput from "@/components/ui/PasswordInput";
 import toast, { Toaster } from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
-import { axiosInstance } from "@/services/axiosInstence";
+// import { axiosInstance } from "@/services/axiosInstence";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../store/slices/authslice";
+import axios from "axios";
 
 
 
@@ -74,7 +75,7 @@ export default function LoginForm() {
                 return false;
             }
 
-            const response = await axiosInstance.post('/auth/login', data);
+            const response = await axios.post(import.meta.env.VITE_BACKEND_URL +'/api/auth/login', data);
 
             if (response.status === 201) {
                 const userData = {
@@ -85,10 +86,13 @@ export default function LoginForm() {
                 };
                 
                 localStorage.setItem("ticket", response.data.token);
+                console.log("token login", localStorage.getItem("ticket"))
                 dispatch(setUser(userData));
                 
                 toast.success("Logged in successfully");
-                navigate("/inscription");
+                setTimeout(() => {
+                    navigate("/inscription");
+                }, 2500);
             }
         } catch (error: any) {
             if (error.response?.data?.message) {

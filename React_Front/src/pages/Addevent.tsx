@@ -5,8 +5,10 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/sidebar/appSidebar";
 import { axiosInstance } from "@/services/axiosInstence";
 import { toast, Toaster } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export default function AddEvent() {
+    const navigate = useNavigate();
     const { id, username, email } = useSelector((state: RootState) => state.auth);
     const [formData, setFormData] = useState({
         title: "",
@@ -42,6 +44,11 @@ export default function AddEvent() {
                     location: "",
                     creator: id || ""
                 });
+            }else if(response.status === 401){
+                toast.error("Unauthorized");
+                setTimeout(() => {
+                    navigate("/login");
+                }, 2500);
             }
         } catch (error: any) {
             // console.error("Error creating event:", error.response?.data?.message);
